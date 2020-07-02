@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+  <ImageView
+      android:layout_width="match_parent"
+      android:layout_height="200dp"
+      app:srcCompat="@mipmap/ic_launcher_foreground"
+      android:contentDescription="@string/logo"/>
+
+  <TextView
+      android:text="@string/username"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:id="@+id/textViewUsername"
+      android:drawableStart="@drawable/ic_person_outline"
+      android:drawableTint="@color/colorAccent"
+      android:drawablePadding="15dp"
+      android:background="@drawable/edit_text"
+      android:layout_marginStart="30dp"
+      android:layout_marginEnd="30dp"/>
+
+  <Space
+      android:layout_width="match_parent"
+      android:layout_height="10dp"/>
+
+  <TextView
+      android:text="@string/wallet"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:id="@+id/textViewWallet"
+      android:drawableStart="@drawable/ic_account_balance_wallet"
+      android:drawableTint="@color/colorAccent"
+      android:drawablePadding="15dp"
+      android:background="@drawable/edit_text"
+      android:layout_marginStart="30dp"
+      android:layout_marginEnd="30dp"/>
+
+  <Space
+      android:layout_width="match_parent"
+      android:layout_height="10dp"/>
+
+  <TextView
+      android:text="@string/balance"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:id="@+id/textViewBalance"
+      android:drawableStart="@drawable/ic_fiber_smart"
+      android:drawableTint="@color/colorAccent"
+      android:drawablePadding="15dp"
+      android:background="@drawable/edit_text_2"
+      android:layout_marginStart="30dp"
+      android:layout_marginEnd="30dp"
+      android:padding="5dp"
+      android:drawableEnd="@drawable/ic_sync"/>
+
+</LinearLayout>

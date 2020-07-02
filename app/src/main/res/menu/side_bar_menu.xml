@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+  <group android:checkableBehavior="single">
+
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_home"
+        android:title="@string/home"/>
+
+    <item
+        android:id="@+id/nav_withdraw"
+        android:icon="@drawable/ic_account_balance_wallet"
+        android:title="@string/withdraw"/>
+
+  </group>
+
+  <item android:title="@string/bot_list">
+
+    <menu>
+
+      <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_fibonacci"
+            android:icon="@drawable/ic_android"
+            android:title="@string/fibonacci"/>
+
+        <item
+            android:id="@+id/nav_marti_angel"
+            android:icon="@drawable/ic_android"
+            android:title="@string/marti_angel"/>
+
+      </group>
+
+    </menu>
+
+  </item>
+
+  <item
+      android:id="@+id/nav_logout"
+      android:icon="@drawable/ic_power_off"
+      android:title="@string/logout"/>
+
+</menu>
