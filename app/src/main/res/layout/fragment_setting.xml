@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:background="@drawable/card_1"
+      android:padding="10dp"
+      android:layout_margin="10dp">
+
+    <Switch
+        android:text="@string/activate_chart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorAccent"
+        android:showText="false"
+        android:checked="true"
+        android:id="@+id/switchActiveChart"
+        android:textStyle="bold"
+        android:padding="10dp"/>
+
+    <Switch
+        android:text="@string/activate_progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorAccent"
+        android:showText="false"
+        android:checked="false"
+        android:id="@+id/switchActiveProgressBar"
+        android:textStyle="bold"
+        android:padding="10dp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/colorAccent"
+        android:padding="10dp"/>
+
+    <TextView
+        android:text="@string/warning_chart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:padding="5dp"
+        android:textColor="@color/colorAccent"/>
+
+  </LinearLayout>
+
+</LinearLayout>

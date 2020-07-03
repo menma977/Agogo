@@ -48,6 +48,9 @@ class LoginActivity : AppCompatActivity() {
     login = findViewById(R.id.buttonLogin)
     getAPK = findViewById(R.id.buttonWebDownloadAPK)
 
+    username.setText("plucky2")
+    password.setText("qwerty")
+
     loading = Loading(this)
     user = User(this)
     config = Config(this)
@@ -121,6 +124,7 @@ class LoginActivity : AppCompatActivity() {
           response = WebController(body).execute().get()
           if (response["code"] == 200) {
             user.setString("usernameWeb", body["username"].toString())
+            user.setBoolean("ifPlay", response.getJSONObject("data")["adamain"].toString().toBoolean())
             loginDoge(response)
           } else {
             runOnUiThread {

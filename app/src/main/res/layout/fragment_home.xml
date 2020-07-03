@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -22,7 +23,10 @@
       android:drawablePadding="15dp"
       android:background="@drawable/edit_text"
       android:layout_marginStart="30dp"
-      android:layout_marginEnd="30dp"/>
+      android:layout_marginEnd="30dp"
+      android:textColor="@color/colorAccent"
+      android:textStyle="bold"
+      android:gravity="start|center_vertical"/>
 
   <Space
       android:layout_width="match_parent"
@@ -36,9 +40,12 @@
       android:drawableStart="@drawable/ic_account_balance_wallet"
       android:drawableTint="@color/colorAccent"
       android:drawablePadding="15dp"
-      android:background="@drawable/edit_text"
+      android:background="@drawable/edit_text_2"
       android:layout_marginStart="30dp"
-      android:layout_marginEnd="30dp"/>
+      android:layout_marginEnd="30dp"
+      android:textColor="@color/colorAccent"
+      android:gravity="start|center_vertical"
+      android:drawableEnd="@drawable/ic_content_copy"/>
 
   <Space
       android:layout_width="match_parent"
@@ -56,6 +63,151 @@
       android:layout_marginStart="30dp"
       android:layout_marginEnd="30dp"
       android:padding="5dp"
-      android:drawableEnd="@drawable/ic_sync"/>
+      android:drawableEnd="@drawable/ic_sync"
+      android:textColor="@color/colorAccent"
+      android:textStyle="bold"
+      android:gravity="start|center_vertical"/>
+
+  <Space
+      android:layout_width="match_parent"
+      android:layout_height="10dp"/>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:background="@drawable/card_1"
+      android:layout_marginStart="20dp"
+      android:layout_marginEnd="20dp"
+      android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+      <TextView
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="0.5"
+          android:text="@string/minimum_deposit"
+          android:textStyle="bold"
+          android:textColor="@color/colorAccent"
+          android:gravity="start"/>
+
+      <TextView
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:text="@string/example_doge"
+          android:textStyle="bold"
+          android:textColor="@color/Danger"
+          android:gravity="end"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+      <TextView
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="0.5"
+          android:text="@string/maximum_deposit"
+          android:textStyle="bold"
+          android:textColor="@color/colorAccent"
+          android:gravity="start"/>
+
+      <TextView
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:text="@string/example_doge"
+          android:textStyle="bold"
+          android:textColor="@color/Danger"
+          android:gravity="end"
+          android:id="@+id/textViewBalanceMax"/>
+
+    </LinearLayout>
+
+  </LinearLayout>
+
+  <Space
+      android:layout_width="match_parent"
+      android:layout_height="10dp"/>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:padding="10dp"
+      android:layout_margin="10dp"
+      android:background="@drawable/card_1"
+      android:orientation="vertical">
+
+    <TextView
+        android:text="@string/welcome"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/colorAccent"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp"/>
+
+    <TextView
+        android:text="@string/welcome_description"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:textSize="8sp"
+        tools:ignore="SmallSp"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="5dp"/>
+
+    <TextView
+        android:text="@string/welcome_description_2"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:textSize="8sp"
+        tools:ignore="SmallSp"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="5dp"/>
+
+    <TextView
+        android:text="@string/welcome_description_3"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:textSize="8sp"
+        tools:ignore="SmallSp"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp"/>
+
+  </LinearLayout>
 
 </LinearLayout>

@@ -1,42 +1,38 @@
 <resources>
-    <string name="app_name">Agogo</string>
-    <string name="loading">Memuat</string>
-    <string name="logo">Logo</string>
-    <string name="Version">Version</string>
-    <string name="username">Username</string>
-    <string name="password">Password</string>
-    <string name="login">Login</string>
-    <string name="copy">Salin</string>
-    <string name="wallet">Wallet</string>
-    <string name="balance">Saldo</string>
-    <string name="activate_chart">Aktifkan Grafik saat Trading</string>
-    <string name="activate_progress_bar">Aktifkan Progress Bar saat Trading</string>
-    <string name="warning_chart">Beberapa android tidak mendukung menjalankan Chart atau progress bar. Chart atau
-        progress bar tidak stabil saat digunakan di Android nougat dan di bawahnya
-    </string>
-    <string name="welcome">Selamat Datang di Robot Miracle DMI Doge:</string>
-    <string name="welcome_description">Robot ini dapat menghasilkan laba minimal 3% untuk Anda dan minimal 1% untuk
-        sponsor Anda. Tapi robot Miracle DMI juga bisa kalah. Jika robot tidak menghasilkan doge keuntungan, maka sistem
-        Miracle DMI akan secara otomatis menggantinya dengan dompet DMI yang dapat Anda jual atau gunakan untuk
-        peningkatan.
-    </string>
-    <string name="withdraw_description">Anda memasukkan terlalu banyak deposit doge atau kurang dari batas minimal,
-        silahkan tarik semua dan masukkan dengan nominal yang benar.
-    </string>
-    <string name="withdraw">Tarik Semua</string>
-    <string name="play">Mainkan Robot</string>
-    <string name="error">Error 404</string>
-    <string name="logout">Keluar</string>
-    <string name="minimum_deposit">Setoran Minimum</string>
-    <string name="example_doge">10000.000000000 DOGE</string>
-    <string name="maximum_deposit">Setoran Maximum</string>
+  <string name="app_name">Agogo</string>
+  <string name="loading">Memuat</string>
+  <string name="logo">Logo</string>
+  <string name="Version">Version</string>
+  <string name="username">Username</string>
+  <string name="password">Password</string>
+  <string name="login">Login</string>
+  <string name="copy">Salin</string>
+  <string name="wallet">Wallet</string>
+  <string name="balance">Saldo</string>
+  <string name="activate_chart">Aktifkan Grafik saat Trading</string>
+  <string name="activate_progress_bar">Aktifkan Progress Bar saat Trading</string>
+  <string name="warning_chart">Beberapa android tidak mendukung menjalankan Chart atau progress bar. Chart atau progress bar tidak stabil saat digunakan di Android nougat dan di bawahnya</string>
+  <string name="welcome">Disclamer:</string>
+  <string name="welcome_description">Perdagangan crypto currency memiliki tingkat risiko tinggi yang mungkin tidak cocok untuk semua investor. Leverage menciptakan eksposur risiko dan kerugian tambahan. Sebelum Anda memutuskan untuk berdagang crypto currency, pertimbangkan dengan cermat tujuan trading, tingkat pengalaman, dan toleransi risiko Anda. Anda bisa kehilangan sebagian atau seluruh asset crypto awal Anda.</string>
+  <string name="welcome_description_2">Jangan menginvestasikan uang yang Anda tidak mampu kehilangannya. Mendidik diri sendiri tentang risiko yang terkait dengan perdagangan crypto currency, dan mencari nasihat dari penasihat keuangan independen jika Anda memiliki pertanyaan.</string>
+  <string name="welcome_description_3">Setiap data dan informasi disediakan sebagaimana adanya semata-mata untuk tujuan informasi, dan tidak dimaksudkan untuk tujuan perdagangan atau saran. Kinerja masa lalu bukan merupakan indikasi hasil di masa mendatang.</string>
+  <string name="withdraw_description">Anda memasukkan terlalu banyak deposit doge atau kurang dari batas minimal,silahkan tarik semua dan masukkan dengan nominal yang benar.</string>
+  <string name="withdraw">Tarik Semua</string>
+  <string name="play">Mainkan Robot</string>
+  <string name="error">Error 404</string>
+  <string name="logout">Keluar</string>
+  <string name="minimum_deposit">Setoran Minimum</string>
+  <string name="example_doge">10000.000000000 DOGE</string>
+  <string name="maximum_deposit">Setoran Maximum</string>
 
-    <!--  include  -->
-    <string name="navigation_drawer_open">Open Navigation Drawer</string>
-    <string name="navigation_drawer_close">Close Navigation Drawer</string>
-    <string name="bot_list">Bot List</string>
-    <string name="home">Home</string>
-    <string name="fibonacci">Fibonacci</string>
-    <string name="marti_angel">Marti Angel</string>
-    <string name="download_new_apk">Download New APK</string>
+  <string name="bot_list">Bot List</string>
+  <string name="home">Home</string>
+  <string name="fibonacci">Fibonacci</string>
+  <string name="marti_angel">Marti Angel</string>
+  <string name="download_new_apk">Download New APK</string>
+  <string name="setting">Setting</string>
+
+  <!--  include  -->
+  <string name="navigation_drawer_open">Open Navigation Drawer</string>
+  <string name="navigation_drawer_close">Close Navigation Drawer</string>
 </resources>

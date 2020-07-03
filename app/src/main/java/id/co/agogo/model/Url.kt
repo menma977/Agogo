@@ -2,7 +2,7 @@ package id.co.agogo.model
 
 object Url {
     fun web(): String {
-        return "https://miracledmi.com/api/trade/index.php"
+        return "https://pluckywin.com/api/trade/index.php"
     }
 
     fun doge(): String {

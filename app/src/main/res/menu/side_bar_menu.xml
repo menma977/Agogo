@@ -16,6 +16,11 @@
         android:icon="@drawable/ic_account_balance_wallet"
         android:title="@string/withdraw"/>
 
+    <item
+        android:id="@+id/nav_setting"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/setting"/>
+
   </group>
 
   <item android:title="@string/bot_list">
