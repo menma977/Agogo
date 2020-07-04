@@ -181,7 +181,7 @@ class NavigationActivity : AppCompatActivity() {
             navigationView.menu.findItem(R.id.nav_withdraw).isVisible = false
             navigationView.menu.findItem(R.id.nav_fibonacci).isVisible = false
             navigationView.menu.findItem(R.id.nav_marti_angel).isVisible = false
-            user.setString("balance", "${BitCoinFormat().decimalToDoge(user.getString("fakeBalance").toBigDecimal())} DOGE")
+            user.setString("balance", "${BitCoinFormat().decimalToDoge(user.getString("fakeBalance").toBigDecimal()).toPlainString()} DOGE")
           }
         } else {
           runOnUiThread {

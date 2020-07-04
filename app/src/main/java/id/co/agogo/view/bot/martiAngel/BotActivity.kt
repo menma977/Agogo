@@ -138,7 +138,7 @@ class BotActivity : AppCompatActivity() {
           body["a"] = "PlaceBet"
           body["s"] = user.getString("key")
           body["Low"] = "0"
-          body["High"] = "500000"
+          body["High"] = "499999"
           body["PayIn"] = payIn.toPlainString()
           body["ProtocolVersion"] = "2"
           body["ClientSeed"] = seed
