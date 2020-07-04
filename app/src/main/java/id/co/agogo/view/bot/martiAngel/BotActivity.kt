@@ -32,6 +32,7 @@ class BotActivity : AppCompatActivity() {
   private lateinit var bitCoinFormat: BitCoinFormat
 
   private lateinit var balance: BigDecimal
+  private lateinit var fakeBalance: BigDecimal
   private lateinit var balanceTarget: BigDecimal
   private lateinit var balanceRemaining: BigDecimal
   private lateinit var payIn: BigDecimal
@@ -86,6 +87,7 @@ class BotActivity : AppCompatActivity() {
     loading.openDialog()
     balance = intent.getSerializableExtra("balance").toString().toBigDecimal()
     balanceRemaining = balance
+    fakeBalance = balance
     balanceTarget = bitCoinFormat.dogeToDecimal(bitCoinFormat.decimalToDoge((balance * balanceLimitTarget) + balance))
     payIn = bitCoinFormat.dogeToDecimal(bitCoinFormat.decimalToDoge(balance) * BigDecimal(0.001))
     balanceLimitTargetLow = bitCoinFormat.dogeToDecimal(bitCoinFormat.decimalToDoge(balance) * balanceLimitTargetLow)
@@ -101,6 +103,10 @@ class BotActivity : AppCompatActivity() {
       onBotMode()
     }
     thread.start()
+  }
+
+  override fun onBackPressed() {
+    Toast.makeText(this, "Tidak Bisa Kembali Ketika memainkan bot", Toast.LENGTH_LONG).show()
   }
 
   private fun configChart() {
@@ -148,20 +154,24 @@ class BotActivity : AppCompatActivity() {
             payIn = bitCoinFormat.dogeToDecimal(bitCoinFormat.decimalToDoge(balance) * BigDecimal(0.001))
 
             if (loseBot) {
+              series.color = getColor(R.color.Danger)
               formula *= 2
             } else {
+              series.color = getColor(R.color.Success)
               formula = 1
               payIn = bitCoinFormat.dogeToDecimal(bitCoinFormat.decimalToDoge(balance) * BigDecimal(0.001))
             }
 
             runOnUiThread {
-              balanceRemainingView.text = "${bitCoinFormat.decimalToDoge(balanceRemaining).toPlainString()} DOGE"
+              fakeBalance += profit / BigDecimal(2)
+              user.setString("fakeBalance", fakeBalance.toPlainString())
+              balanceRemainingView.text = "${bitCoinFormat.decimalToDoge(fakeBalance).toPlainString()} DOGE"
 
               progress(balance, balanceRemaining, balanceTarget)
-              if (rowChart >= 29) {
+              if (rowChart >= 39) {
                 series.series.removeAt(0)
               }
-              series.addPoint(ValueLinePoint("$rowChart", bitCoinFormat.decimalToDoge(balanceRemaining).toFloat()))
+              series.addPoint(ValueLinePoint("$rowChart", bitCoinFormat.decimalToDoge(fakeBalance).toFloat()))
               cubicLineChart.addSeries(series)
               cubicLineChart.refreshDrawableState()
 
@@ -190,6 +200,7 @@ class BotActivity : AppCompatActivity() {
         goTo.putExtra("status", "CUT LOSS")
       }
       goTo.putExtra("startBalance", balance)
+      goTo.putExtra("balanceRemaining", balanceRemaining)
       goTo.putExtra("uniqueCode", intent.getSerializableExtra("uniqueCode").toString())
       runOnUiThread {
         startActivity(goTo)
@@ -226,11 +237,11 @@ class BotActivity : AppCompatActivity() {
     }
   }
 
-  private fun setDefaultView(){
+  private fun setDefaultView() {
     setBalanceView("PayIn", payInLinearLayout, true)
     setBalanceView("PayOut", payOutLinearLayout, true)
     setBalanceView("Profit", profitLinearLayout, true)
-    for (i in 0 .. maxRow) {
+    for (i in 0..maxRow) {
       setBalanceView("0", payInLinearLayout, false)
       setBalanceView("0", payOutLinearLayout, false)
       setBalanceView("0", profitLinearLayout, false)

@@ -48,8 +48,8 @@ class LoginActivity : AppCompatActivity() {
     login = findViewById(R.id.buttonLogin)
     getAPK = findViewById(R.id.buttonWebDownloadAPK)
 
-    username.setText("plucky2")
-    password.setText("qwerty")
+    //username.setText("plucky2")
+    //password.setText("qwerty")
 
     loading = Loading(this)
     user = User(this)

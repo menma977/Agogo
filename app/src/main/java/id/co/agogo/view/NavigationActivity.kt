@@ -51,7 +51,7 @@ class NavigationActivity : AppCompatActivity() {
   private lateinit var response: JSONObject
   private lateinit var goTo: Intent
   private lateinit var balanceValue: BigDecimal
-  private lateinit var uniqueCode : String
+  private lateinit var uniqueCode: String
 
   private var limitDepositDefault = BigDecimal(0.000000000, MathContext.DECIMAL32).setScale(8, BigDecimal.ROUND_HALF_DOWN)
 
@@ -120,27 +120,11 @@ class NavigationActivity : AppCompatActivity() {
           true
         }
         R.id.nav_fibonacci -> {
-//          startBotFibonacci()
-          goTo = Intent(applicationContext, BotFibonacciActivity::class.java)
-          goTo.putExtra("uniqueCode", "asdasdasdasd")
-          goTo.putExtra("balance", balanceValue)
-          runOnUiThread {
-            startActivity(goTo)
-            finish()
-            loading.closeDialog()
-          }
+          startBotFibonacci()
           true
         }
         R.id.nav_marti_angel -> {
-//          startBotMartiAngel()
-          goTo = Intent(applicationContext, BotMartiAngelActivity::class.java)
-          goTo.putExtra("uniqueCode", "asdasdasdasd")
-          goTo.putExtra("balance", balanceValue)
-          runOnUiThread {
-            startActivity(goTo)
-            finish()
-            loading.closeDialog()
-          }
+          startBotMartiAngel()
           true
         }
         R.id.nav_logout -> {
@@ -178,6 +162,7 @@ class NavigationActivity : AppCompatActivity() {
         }
         if (BitCoinFormat().decimalToDoge(balanceValue) >= BigDecimal(100) && balanceValue <= balanceLimit) {
           runOnUiThread {
+            user.setString("fakeBalance", "0")
             navigationView.menu.findItem(R.id.nav_withdraw).isVisible = false
             navigationView.menu.findItem(R.id.nav_fibonacci).isVisible = true
             navigationView.menu.findItem(R.id.nav_marti_angel).isVisible = true
@@ -185,6 +170,7 @@ class NavigationActivity : AppCompatActivity() {
           }
         } else if (balanceValue > balanceLimit) {
           runOnUiThread {
+            user.setString("fakeBalance", "0")
             navigationView.menu.findItem(R.id.nav_withdraw).isVisible = true
             navigationView.menu.findItem(R.id.nav_fibonacci).isVisible = false
             navigationView.menu.findItem(R.id.nav_marti_angel).isVisible = false
@@ -195,10 +181,11 @@ class NavigationActivity : AppCompatActivity() {
             navigationView.menu.findItem(R.id.nav_withdraw).isVisible = false
             navigationView.menu.findItem(R.id.nav_fibonacci).isVisible = false
             navigationView.menu.findItem(R.id.nav_marti_angel).isVisible = false
-            user.setString("balance", "${BitCoinFormat().decimalToDoge(balanceValue).toPlainString()} DOGE")
+            user.setString("balance", "${BitCoinFormat().decimalToDoge(user.getString("fakeBalance").toBigDecimal())} DOGE")
           }
         } else {
           runOnUiThread {
+            user.setString("fakeBalance", "0")
             navigationView.menu.findItem(R.id.nav_withdraw).isVisible =
               BitCoinFormat().decimalToDoge(balanceValue) < BigDecimal(10000) && BitCoinFormat().decimalToDoge(balanceValue) > BigDecimal(0)
             navigationView.menu.findItem(R.id.nav_fibonacci).isVisible = false
@@ -237,7 +224,7 @@ class NavigationActivity : AppCompatActivity() {
   private fun startBotFibonacci() {
     loading.openDialog()
     Timer().schedule(100) {
-      response = WebController(bodyBot()).execute().get()
+      response = WebController(bodyBot("StartTrading")).execute().get()
       try {
         if (response["code"] == 200) {
           if (response.getJSONObject("data")["main"] == true) {
@@ -278,7 +265,7 @@ class NavigationActivity : AppCompatActivity() {
   private fun startBotMartiAngel() {
     loading.openDialog()
     Timer().schedule(100) {
-      response = WebController(bodyBot()).execute().get()
+      response = WebController(bodyBot("StartTrading2")).execute().get()
       try {
         if (response["code"] == 200) {
           if (response.getJSONObject("data")["main"] == true) {
@@ -316,10 +303,10 @@ class NavigationActivity : AppCompatActivity() {
     }
   }
 
-  private fun bodyBot() : HashMap<String, String> {
+  private fun bodyBot(target: String): HashMap<String, String> {
     uniqueCode = UUID.randomUUID().toString()
     val body = HashMap<String, String>()
-    body["a"] = "StartTrading"
+    body["a"] = target
     body["usertrade"] = user.getString("username")
     body["passwordtrade"] = user.getString("password")
     body["notrx"] = uniqueCode
