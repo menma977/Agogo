@@ -99,9 +99,13 @@ class NavigationActivity : AppCompatActivity() {
 
   override fun onStart() {
     super.onStart()
-    val intentFilter = IntentFilter()
-    intentFilter.addAction("id.co.agogo")
-    registerReceiver(broadcastReceiver, intentFilter)
+    try {
+      val intentFilter = IntentFilter()
+      intentFilter.addAction("id.co.agogo")
+      registerReceiver(broadcastReceiver, intentFilter)
+    }catch (e: java.lang.Exception) {
+
+    }
   }
 
   override fun onStop() {
