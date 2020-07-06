@@ -84,9 +84,7 @@ class HomeFragment : Fragment() {
 
   override fun onPause() {
     super.onPause()
-    if (broadcastReceiver.isOrderedBroadcast) {
-      parentActivity.unregisterReceiver(broadcastReceiver)
-    }
+    parentActivity.unregisterReceiver(broadcastReceiver)
   }
 
   private var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {

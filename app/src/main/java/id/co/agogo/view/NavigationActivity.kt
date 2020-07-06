@@ -99,29 +99,22 @@ class NavigationActivity : AppCompatActivity() {
 
   override fun onStart() {
     super.onStart()
-    try {
-      val intentFilter = IntentFilter()
-      intentFilter.addAction("id.co.agogo")
-      registerReceiver(broadcastReceiver, intentFilter)
-    }catch (e: java.lang.Exception) {
-
-    }
+    val intentFilter = IntentFilter()
+    intentFilter.addAction("id.co.agogo")
+    registerReceiver(broadcastReceiver, intentFilter)
   }
 
   override fun onStop() {
     super.onStop()
-    if (broadcastReceiver.isOrderedBroadcast) {
-      unregisterReceiver(broadcastReceiver)
-    }
+    unregisterReceiver(broadcastReceiver)
+    stopService(intentService)
   }
 
   override fun onBackPressed() {
     if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
       drawerLayout.closeDrawer(GravityCompat.START)
     } else {
-      if (broadcastReceiver.isOrderedBroadcast) {
-        unregisterReceiver(broadcastReceiver)
-      }
+      stopService(intentService)
       super.onBackPressed()
     }
   }
@@ -157,20 +150,14 @@ class NavigationActivity : AppCompatActivity() {
           true
         }
         R.id.nav_fibonacci -> {
-          stopService(intentService)
-          unregisterReceiver(broadcastReceiver)
           startBotFibonacci()
           true
         }
         R.id.nav_marti_angel -> {
-          stopService(intentService)
-          unregisterReceiver(broadcastReceiver)
           startBotMartiAngel()
           true
         }
         R.id.nav_logout -> {
-          stopService(intentService)
-          unregisterReceiver(broadcastReceiver)
           user.clear()
           config.clear()
           goTo = Intent(this, MainActivity::class.java)
@@ -218,7 +205,7 @@ class NavigationActivity : AppCompatActivity() {
               )
             }
           }
-        } else if (BitCoinFormat().decimalToDoge(balanceValue) >= BigDecimal(100) && balanceValue <= balanceLimit) {
+        } else if (BitCoinFormat().decimalToDoge(balanceValue) >= BigDecimal(10000) && balanceValue <= balanceLimit) {
           runOnUiThread {
             user.setString("fakeBalance", "0")
             navigationView.menu.findItem(R.id.nav_withdraw).isVisible = false

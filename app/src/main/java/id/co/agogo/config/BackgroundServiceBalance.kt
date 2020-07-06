@@ -47,7 +47,7 @@ class BackgroundServiceBalance : IntentService("BackgroundServiceBalance") {
               }
               val privateIntent = Intent()
               if (!user.getBoolean("ifPlay")) {
-                if (BitCoinFormat().decimalToDoge(balanceValue) >= BigDecimal(100) && balanceValue <= balanceLimit) {
+                if (BitCoinFormat().decimalToDoge(balanceValue) >= BigDecimal(1000) && balanceValue <= balanceLimit) {
                   privateIntent.putExtra("nav_withdraw", false)
                   privateIntent.putExtra("nav_fibonacci", true)
                   privateIntent.putExtra("nav_marti_angel", true)
