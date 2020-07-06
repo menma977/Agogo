@@ -104,15 +104,20 @@ class NavigationActivity : AppCompatActivity() {
     registerReceiver(broadcastReceiver, intentFilter)
   }
 
-  override fun onDestroy() {
-    super.onDestroy()
-    unregisterReceiver(broadcastReceiver)
+  override fun onStop() {
+    super.onStop()
+    if (broadcastReceiver.isOrderedBroadcast) {
+      unregisterReceiver(broadcastReceiver)
+    }
   }
 
   override fun onBackPressed() {
     if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
       drawerLayout.closeDrawer(GravityCompat.START)
     } else {
+      if (broadcastReceiver.isOrderedBroadcast) {
+        unregisterReceiver(broadcastReceiver)
+      }
       super.onBackPressed()
     }
   }

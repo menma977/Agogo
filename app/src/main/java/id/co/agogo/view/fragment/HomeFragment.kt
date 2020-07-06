@@ -72,21 +72,26 @@ class HomeFragment : Fragment() {
       }
     }
 
-    val intentFilter = IntentFilter()
-    intentFilter.addAction("id.co.agogo")
-    parentActivity.registerReceiver(broadcastReceiver, intentFilter)
-
     return root
   }
 
-  override fun onPause() {
-    super.onPause()
-    parentActivity.unregisterReceiver(broadcastReceiver)
-  }
-
-  private var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-    override fun onReceive(context: Context, intent: Intent) {
-      balance.text = user.getString("balance")
-    }
-  }
+//  override fun onResume() {
+//    super.onResume()
+//    val intentFilter = IntentFilter()
+//    intentFilter.addAction("id.co.agogo")
+//    parentActivity.registerReceiver(broadcastReceiver, intentFilter)
+//  }
+//
+//  override fun onPause() {
+//    super.onPause()
+//    if (broadcastReceiver.isOrderedBroadcast) {
+//      parentActivity.unregisterReceiver(broadcastReceiver)
+//    }
+//  }
+//
+//  private var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+//    override fun onReceive(context: Context, intent: Intent) {
+//      balance.text = user.getString("balance")
+//    }
+//  }
 }

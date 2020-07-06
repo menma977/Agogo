@@ -55,16 +55,21 @@ class WithdrawFragment : Fragment() {
       withdraw()
     }
 
+    return root
+  }
+
+  override fun onResume() {
+    super.onResume()
     val intentFilter = IntentFilter()
     intentFilter.addAction("id.co.agogo")
     parentActivity.registerReceiver(broadcastReceiver, intentFilter)
-
-    return root
   }
 
   override fun onPause() {
     super.onPause()
-    parentActivity.unregisterReceiver(broadcastReceiver)
+    if (broadcastReceiver.isOrderedBroadcast) {
+      parentActivity.unregisterReceiver(broadcastReceiver)
+    }
   }
 
   private var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
