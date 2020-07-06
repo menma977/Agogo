@@ -3,6 +3,9 @@ package id.co.agogo.config
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 
+/**
+ * Generate MD5
+ */
 class MD5 {
   fun convert(input : String) : String {
     val md5 = "MD5"

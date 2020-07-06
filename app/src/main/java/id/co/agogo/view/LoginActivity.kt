@@ -24,6 +24,20 @@ import java.lang.Exception
 import java.util.*
 import kotlin.concurrent.schedule
 
+/**
+ * class LoginActivity
+ * @property version TextView
+ * @property massage TextView
+ * @property username EditText
+ * @property password EditText
+ * @property login Button
+ * @property getAPK Button
+ * @property response JSONObject
+ * @property goTo Intent
+ * @property loading Loading
+ * @property user User
+ * @property config Config
+ */
 class LoginActivity : AppCompatActivity() {
   private lateinit var version: TextView
   private lateinit var massage: TextView
@@ -37,6 +51,10 @@ class LoginActivity : AppCompatActivity() {
   private lateinit var user: User
   private lateinit var config: Config
 
+  /**
+   * override fun onCreate
+   * @param savedInstanceState Bundle?
+   */
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_login)
@@ -141,6 +159,10 @@ class LoginActivity : AppCompatActivity() {
     }
   }
 
+  /**
+   * private fun loginDoge
+   * @param data JSONObject
+   */
   private fun loginDoge(data: JSONObject) {
     val body = HashMap<String, String>()
     body["a"] = "Login"

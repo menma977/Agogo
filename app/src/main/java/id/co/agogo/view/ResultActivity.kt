@@ -18,6 +18,16 @@ import java.math.BigDecimal
 import java.util.*
 import kotlin.concurrent.schedule
 
+/**
+ * class ResultActivity
+ * @property user User
+ * @property loading Loading
+ * @property status TextView
+ * @property bitCoinFormat BitCoinFormat
+ * @property uniqueCode String
+ * @property startBalance BigDecimal
+ * @property response JSONObject
+ */
 class ResultActivity : AppCompatActivity() {
   private lateinit var user: User
   private lateinit var loading: Loading
@@ -28,6 +38,10 @@ class ResultActivity : AppCompatActivity() {
   private lateinit var startBalance: BigDecimal
   private lateinit var response: JSONObject
 
+  /**
+   * override fun onCreate
+   * @param savedInstanceState Bundle?
+   */
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_result)

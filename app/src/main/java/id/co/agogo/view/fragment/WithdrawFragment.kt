@@ -23,6 +23,19 @@ import org.json.JSONObject
 import java.util.*
 import kotlin.concurrent.schedule
 
+/**
+ * class WithdrawFragment
+ * @property username TextView
+ * @property balance TextView
+ * @property withdraw Button
+ * @property user User
+ * @property loading Loading
+ * @property response JSONObject
+ * @property goTo Intent
+ * @property intentService Intent
+ * @property parentActivity NavigationActivity
+ * @property broadcastReceiver BroadcastReceiver
+ */
 class WithdrawFragment : Fragment() {
   private lateinit var username: TextView
   private lateinit var balance: TextView
@@ -35,6 +48,13 @@ class WithdrawFragment : Fragment() {
   private lateinit var intentService: Intent
   private lateinit var parentActivity: NavigationActivity
 
+  /**
+   * override fun onCreateView
+   * @param inflater LayoutInflater
+   * @param container ViewGroup?
+   * @param savedInstanceState Bundle?
+   * @return View?
+   */
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     val root = inflater.inflate(R.layout.fragment_withdraw, container, false)
 
@@ -58,6 +78,7 @@ class WithdrawFragment : Fragment() {
     return root
   }
 
+  /** start Broadcast */
   override fun onResume() {
     super.onResume()
     val intentFilter = IntentFilter()
@@ -65,17 +86,20 @@ class WithdrawFragment : Fragment() {
     parentActivity.registerReceiver(broadcastReceiver, intentFilter)
   }
 
+  /** stop Broadcast */
   override fun onPause() {
     super.onPause()
     parentActivity.unregisterReceiver(broadcastReceiver)
   }
 
+  /** declaration broadcastReceiver */
   private var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
       balance.text = user.getString("balance")
     }
   }
 
+  /** function Withdraw */
   private fun withdraw() {
     loading.openDialog()
     val body = HashMap<String, String>()

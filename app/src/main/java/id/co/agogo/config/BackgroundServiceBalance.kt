@@ -8,6 +8,14 @@ import org.json.JSONObject
 import java.math.BigDecimal
 import java.math.MathContext
 
+/**
+ * class BackgroundServiceBalance
+ * @property response JSONObject
+ * @property balanceValue BigDecimal
+ * @property user User
+ * @property isStopService Boolean
+ * @property limitDepositDefault (java.math.BigDecimal..java.math.BigDecimal?)
+ */
 class BackgroundServiceBalance : IntentService("BackgroundServiceBalance") {
   private lateinit var response: JSONObject
   private lateinit var balanceValue: BigDecimal
@@ -16,6 +24,11 @@ class BackgroundServiceBalance : IntentService("BackgroundServiceBalance") {
   private var isStopService: Boolean = false
   private var limitDepositDefault = BigDecimal(0.000000000, MathContext.DECIMAL32).setScale(8, BigDecimal.ROUND_HALF_DOWN)
 
+  /**
+   * @override function onDestroy
+   * to start Automatic update balance
+   * @param intent Intent
+   */
   override fun onHandleIntent(intent: Intent) {
     user = User(this)
 
@@ -45,6 +58,7 @@ class BackgroundServiceBalance : IntentService("BackgroundServiceBalance") {
               } else {
                 BitCoinFormat().dogeToDecimal(user.getString("limitDeposit").toBigDecimal())
               }
+              /** declaration Intent From Broadcast */
               val privateIntent = Intent()
               if (!user.getBoolean("ifPlay")) {
                 if (BitCoinFormat().decimalToDoge(balanceValue) >= BigDecimal(1000) && balanceValue <= balanceLimit) {
@@ -73,6 +87,7 @@ class BackgroundServiceBalance : IntentService("BackgroundServiceBalance") {
                 privateIntent.putExtra("nav_marti_angel", false)
                 user.setString("fakeBalance", "0")
               }
+              /** start Broadcast */
               privateIntent.action = "id.co.agogo"
               sendBroadcast(privateIntent)
             } else {
@@ -84,6 +99,10 @@ class BackgroundServiceBalance : IntentService("BackgroundServiceBalance") {
     }
   }
 
+  /**
+   * @override function onDestroy
+   * to stop update Balance
+   */
   override fun onDestroy() {
     isStopService = true
     super.onDestroy()

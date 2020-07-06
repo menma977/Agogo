@@ -6,6 +6,12 @@ import android.app.Activity
 import android.app.Dialog
 import id.co.agogo.R
 
+/**
+ * class Loading
+ * @property activity Activity
+ * @property dialog Dialog
+ * @constructor
+ */
 @SuppressLint("InflateParams")
 class Loading(private val activity: Activity) {
   private val dialog = Dialog(activity, Theme_Translucent_NoTitleBar)

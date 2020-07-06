@@ -4,6 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 
+/**
+ * class Config
+ * @property sharedPreferences SharedPreferences
+ * @property sharedPreferencesEditor Editor
+ * @constructor
+ */
 @SuppressLint("CommitPrefEdits")
 class Config(context: Context) {
   private val sharedPreferences: SharedPreferences

@@ -14,6 +14,11 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.concurrent.TimeUnit
 
+/**
+ * class DogeController
+ * @property body HashMap<String, String>
+ * @constructor
+ */
 class DogeController(private var body: HashMap<String, String>) : AsyncTask<Void, Void, JSONObject>() {
   override fun doInBackground(vararg params: Void?): JSONObject {
     return try {

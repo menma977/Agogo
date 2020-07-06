@@ -15,6 +15,14 @@ import java.lang.Exception
 import java.util.*
 import kotlin.concurrent.schedule
 
+/**
+ * class MainActivity
+ * @property goTo Intent
+ * @property user User
+ * @property config Config
+ * @property response JSONObject
+ * @property bitCoinFormat BitCoinFormat
+ */
 class MainActivity : AppCompatActivity() {
   private lateinit var goTo: Intent
   private lateinit var user: User
@@ -22,6 +30,10 @@ class MainActivity : AppCompatActivity() {
   private lateinit var response: JSONObject
   private lateinit var bitCoinFormat: BitCoinFormat
 
+  /**
+   * override fun onCreate
+   * @param savedInstanceState Bundle?
+   */
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
@@ -31,6 +43,9 @@ class MainActivity : AppCompatActivity() {
     bitCoinFormat = BitCoinFormat()
   }
 
+  /**
+   * override fun onStart
+   */
   override fun onStart() {
     super.onStart()
     Timer().schedule(100) {
@@ -60,6 +75,10 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
+  /**
+   * private fun isLogin
+   * @param data JSONObject
+   */
   private fun isLogin(data: JSONObject) {
     user.setString("wallet", data.getJSONObject("data")["walletdepo"].toString())
     user.setString("limitDeposit", data.getJSONObject("data")["maxdepo"].toString())
@@ -71,6 +90,9 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
+  /**
+   * private fun isNotLogin
+   */
   private fun isNotLogin() {
     user.clear()
     config.clear()
@@ -85,6 +107,9 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
+  /**
+   * private fun isLoginFailed
+   */
   private fun isLoginFailed() {
     user.clear()
     config.clear()
@@ -99,6 +124,10 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
+  /**
+   * private fun isLoginWrongVersion
+   * @param newVersion String
+   */
   private fun isLoginWrongVersion(newVersion: String) {
     user.clear()
     config.clear()

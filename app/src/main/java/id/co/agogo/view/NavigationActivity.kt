@@ -41,7 +41,24 @@ import id.co.agogo.view.bot.martiAngel.BotChartAndProgressBarGoneActivity as Bot
 import id.co.agogo.view.bot.martiAngel.BotChartGoneActivity as BotMartiAngelChartGoneActivity
 import id.co.agogo.view.bot.martiAngel.BotProgressBarGoneActivity as BotMartiAngelProgressBarGoneActivity
 
-
+/**
+ * class NavigationActivity
+ * @property username TextView
+ * @property balance TextView
+ * @property toolbar Toolbar
+ * @property drawerLayout DrawerLayout
+ * @property navigationView NavigationView
+ * @property user User
+ * @property config Config
+ * @property loading Loading
+ * @property response JSONObject
+ * @property goTo Intent
+ * @property balanceValue BigDecimal
+ * @property uniqueCode String
+ * @property intentService Intent
+ * @property limitDepositDefault (java.math.BigDecimal..java.math.BigDecimal?)
+ * @property broadcastReceiver BroadcastReceiver
+ */
 class NavigationActivity : AppCompatActivity() {
   private lateinit var username: TextView
   private lateinit var balance: TextView
@@ -60,6 +77,10 @@ class NavigationActivity : AppCompatActivity() {
 
   private var limitDepositDefault = BigDecimal(0.000000000, MathContext.DECIMAL32).setScale(8, BigDecimal.ROUND_HALF_DOWN)
 
+  /**
+   * override fun onCreate
+   * @param savedInstanceState Bundle?
+   */
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_navigation)
@@ -72,6 +93,7 @@ class NavigationActivity : AppCompatActivity() {
     user = User(this)
     config = Config(this)
 
+    /** declaration dan start service */
     intentService = Intent(this, BackgroundServiceBalance::class.java)
     intentService.putExtra("key", user.getString("key"))
     startService(intentService)
@@ -97,6 +119,7 @@ class NavigationActivity : AppCompatActivity() {
     getBalance(savedInstanceState)
   }
 
+  /** start Broadcast */
   override fun onStart() {
     super.onStart()
     val intentFilter = IntentFilter()
@@ -104,12 +127,14 @@ class NavigationActivity : AppCompatActivity() {
     registerReceiver(broadcastReceiver, intentFilter)
   }
 
+  /** stop Broadcast and service */
   override fun onStop() {
     super.onStop()
     unregisterReceiver(broadcastReceiver)
     stopService(intentService)
   }
 
+  /** stop Broadcast and service. return to home */
   override fun onBackPressed() {
     if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
       drawerLayout.closeDrawer(GravityCompat.START)
@@ -119,6 +144,7 @@ class NavigationActivity : AppCompatActivity() {
     }
   }
 
+  /** declaration broadcastReceiver */
   private var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
       navigationView.menu.findItem(R.id.nav_withdraw).isVisible = intent.getBooleanExtra("nav_withdraw", false)
@@ -128,6 +154,7 @@ class NavigationActivity : AppCompatActivity() {
     }
   }
 
+  /** set Navigation */
   private fun onNavigationItemSelected() {
     navigationView.setNavigationItemSelectedListener {
       val itemResponse = when (it.itemId) {
@@ -174,6 +201,10 @@ class NavigationActivity : AppCompatActivity() {
     }
   }
 
+  /**
+   * private fun getBalance
+   * @param savedInstanceState Bundle?
+   */
   private fun getBalance(savedInstanceState: Bundle?) {
     loading.openDialog()
     val body = HashMap<String, String>()
@@ -256,6 +287,7 @@ class NavigationActivity : AppCompatActivity() {
     }
   }
 
+  /** start Bot startBotFibonacci */
   private fun startBotFibonacci() {
     loading.openDialog()
     Timer().schedule(100) {
@@ -297,6 +329,7 @@ class NavigationActivity : AppCompatActivity() {
     }
   }
 
+  /** start Bot BotMartiAngel */
   private fun startBotMartiAngel() {
     loading.openDialog()
     Timer().schedule(100) {
@@ -338,6 +371,11 @@ class NavigationActivity : AppCompatActivity() {
     }
   }
 
+  /**
+   * private fun bodyBot
+   * @param target String
+   * @return HashMap<String, String>
+   */
   private fun bodyBot(target: String): HashMap<String, String> {
     uniqueCode = UUID.randomUUID().toString()
     val body = HashMap<String, String>()
@@ -350,6 +388,10 @@ class NavigationActivity : AppCompatActivity() {
     return body
   }
 
+  /**
+   * private fun isPlaying
+   * @param data JSONObject
+   */
   private fun isPlaying(data: JSONObject) {
     val oldBalanceData = BigDecimal(data.getJSONObject("data")["saldoawalmain"].toString(), MathContext.DECIMAL32)
     uniqueCode = response.getJSONObject("data")["notrxlama"].toString()

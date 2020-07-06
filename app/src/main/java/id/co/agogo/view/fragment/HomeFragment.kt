@@ -17,7 +17,21 @@ import id.co.agogo.view.NavigationActivity
 import java.util.*
 import kotlin.concurrent.schedule
 
-
+/**
+ * class HomeFragment
+ * @property username TextView
+ * @property wallet TextView
+ * @property balance TextView
+ * @property balanceMax TextView
+ * @property clipboardManager ClipboardManager
+ * @property clipData ClipData
+ * @property loading Loading
+ * @property parentActivity NavigationActivity
+ * @property user User
+ * @property goTo Intent
+ * @property intentService Intent
+ * @property broadcastReceiver BroadcastReceiver
+ */
 class HomeFragment : Fragment() {
   private lateinit var username: TextView
   private lateinit var wallet: TextView
@@ -32,6 +46,13 @@ class HomeFragment : Fragment() {
   private lateinit var goTo: Intent
   private lateinit var intentService: Intent
 
+  /**
+   * override fun onCreateView
+   * @param inflater LayoutInflater
+   * @param container ViewGroup?
+   * @param savedInstanceState Bundle?
+   * @return View?
+   */
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     val root = inflater.inflate(R.layout.fragment_home, container, false)
 
@@ -75,6 +96,7 @@ class HomeFragment : Fragment() {
     return root
   }
 
+  /** start Broadcast */
   override fun onResume() {
     super.onResume()
     val intentFilter = IntentFilter()
@@ -82,11 +104,13 @@ class HomeFragment : Fragment() {
     parentActivity.registerReceiver(broadcastReceiver, intentFilter)
   }
 
+  /** stop Broadcast */
   override fun onPause() {
     super.onPause()
     parentActivity.unregisterReceiver(broadcastReceiver)
   }
 
+  /** declaration broadcastReceiver */
   private var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
       balance.text = user.getString("balance")
