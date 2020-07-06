@@ -1,6 +1,9 @@
 package id.co.agogo.view
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -12,6 +15,7 @@ import android.widget.TextView
 import android.widget.Toast
 import id.co.agogo.MainActivity
 import id.co.agogo.R
+import id.co.agogo.config.BackgroundServiceBalance
 import id.co.agogo.config.BitCoinFormat
 import id.co.agogo.config.Loading
 import id.co.agogo.config.MD5
@@ -19,24 +23,24 @@ import id.co.agogo.controller.DogeController
 import id.co.agogo.controller.WebController
 import id.co.agogo.model.Config
 import id.co.agogo.model.User
-import id.co.agogo.view.bot.fibonacci.BotActivity as BotFibonacciActivity
-import id.co.agogo.view.bot.fibonacci.BotChartGoneActivity as BotFibonacciChartGoneActivity
-import id.co.agogo.view.bot.fibonacci.BotProgressBarGoneActivity as BotFibonacciProgressBarGoneActivity
-import id.co.agogo.view.bot.fibonacci.BotChartAndProgressBarGoneActivity as BotFibonacciChartAndProgressBarGoneActivity
-import id.co.agogo.view.bot.martiAngel.BotActivity as BotMartiAngelActivity
-import id.co.agogo.view.bot.martiAngel.BotChartGoneActivity as BotMartiAngelChartGoneActivity
-import id.co.agogo.view.bot.martiAngel.BotProgressBarGoneActivity as BotMartiAngelProgressBarGoneActivity
-import id.co.agogo.view.bot.martiAngel.BotChartAndProgressBarGoneActivity as BotMartiAngelChartAndProgressBarGoneActivity
 import id.co.agogo.view.fragment.HomeFragment
 import id.co.agogo.view.fragment.SettingFragment
 import id.co.agogo.view.fragment.WithdrawFragment
 import org.json.JSONObject
-import java.lang.Exception
 import java.math.BigDecimal
 import java.math.MathContext
 import java.util.*
 import kotlin.collections.HashMap
 import kotlin.concurrent.schedule
+import id.co.agogo.view.bot.fibonacci.BotActivity as BotFibonacciActivity
+import id.co.agogo.view.bot.fibonacci.BotChartAndProgressBarGoneActivity as BotFibonacciChartAndProgressBarGoneActivity
+import id.co.agogo.view.bot.fibonacci.BotChartGoneActivity as BotFibonacciChartGoneActivity
+import id.co.agogo.view.bot.fibonacci.BotProgressBarGoneActivity as BotFibonacciProgressBarGoneActivity
+import id.co.agogo.view.bot.martiAngel.BotActivity as BotMartiAngelActivity
+import id.co.agogo.view.bot.martiAngel.BotChartAndProgressBarGoneActivity as BotMartiAngelChartAndProgressBarGoneActivity
+import id.co.agogo.view.bot.martiAngel.BotChartGoneActivity as BotMartiAngelChartGoneActivity
+import id.co.agogo.view.bot.martiAngel.BotProgressBarGoneActivity as BotMartiAngelProgressBarGoneActivity
+
 
 class NavigationActivity : AppCompatActivity() {
   private lateinit var username: TextView
@@ -52,6 +56,7 @@ class NavigationActivity : AppCompatActivity() {
   private lateinit var goTo: Intent
   private lateinit var balanceValue: BigDecimal
   private lateinit var uniqueCode: String
+  private lateinit var intentService: Intent
 
   private var limitDepositDefault = BigDecimal(0.000000000, MathContext.DECIMAL32).setScale(8, BigDecimal.ROUND_HALF_DOWN)
 
@@ -67,7 +72,9 @@ class NavigationActivity : AppCompatActivity() {
     user = User(this)
     config = Config(this)
 
-    loading.openDialog()
+    intentService = Intent(this, BackgroundServiceBalance::class.java)
+    intentService.putExtra("key", user.getString("key"))
+    startService(intentService)
 
     val headerView = navigationView.getHeaderView(0)
     username = headerView.findViewById(R.id.textViewUsernameSide)
@@ -90,11 +97,32 @@ class NavigationActivity : AppCompatActivity() {
     getBalance(savedInstanceState)
   }
 
+  override fun onStart() {
+    super.onStart()
+    val intentFilter = IntentFilter()
+    intentFilter.addAction("id.co.agogo")
+    registerReceiver(broadcastReceiver, intentFilter)
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    unregisterReceiver(broadcastReceiver)
+  }
+
   override fun onBackPressed() {
     if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
       drawerLayout.closeDrawer(GravityCompat.START)
     } else {
       super.onBackPressed()
+    }
+  }
+
+  private var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent) {
+      navigationView.menu.findItem(R.id.nav_withdraw).isVisible = intent.getBooleanExtra("nav_withdraw", false)
+      navigationView.menu.findItem(R.id.nav_fibonacci).isVisible = intent.getBooleanExtra("nav_fibonacci", false)
+      navigationView.menu.findItem(R.id.nav_marti_angel).isVisible = intent.getBooleanExtra("nav_marti_angel", false)
+      balance.text = user.getString("balance")
     }
   }
 
@@ -120,14 +148,20 @@ class NavigationActivity : AppCompatActivity() {
           true
         }
         R.id.nav_fibonacci -> {
+          stopService(intentService)
+          unregisterReceiver(broadcastReceiver)
           startBotFibonacci()
           true
         }
         R.id.nav_marti_angel -> {
+          stopService(intentService)
+          unregisterReceiver(broadcastReceiver)
           startBotMartiAngel()
           true
         }
         R.id.nav_logout -> {
+          stopService(intentService)
+          unregisterReceiver(broadcastReceiver)
           user.clear()
           config.clear()
           goTo = Intent(this, MainActivity::class.java)
@@ -145,6 +179,7 @@ class NavigationActivity : AppCompatActivity() {
   }
 
   private fun getBalance(savedInstanceState: Bundle?) {
+    loading.openDialog()
     val body = HashMap<String, String>()
     body["a"] = "GetBalance"
     body["s"] = user.getString("key")
@@ -160,7 +195,21 @@ class NavigationActivity : AppCompatActivity() {
         } else {
           BitCoinFormat().dogeToDecimal(user.getString("limitDeposit").toBigDecimal())
         }
-        if (BitCoinFormat().decimalToDoge(balanceValue) >= BigDecimal(100) && balanceValue <= balanceLimit) {
+        if (user.getBoolean("ifPlay")) {
+          runOnUiThread {
+            navigationView.menu.findItem(R.id.nav_withdraw).isVisible = false
+            navigationView.menu.findItem(R.id.nav_fibonacci).isVisible = false
+            navigationView.menu.findItem(R.id.nav_marti_angel).isVisible = false
+            if (user.getString("fakeBalance").isEmpty()) {
+              user.setString("balance", "${BitCoinFormat().decimalToDoge(balanceValue).toPlainString()} DOGE")
+            } else {
+              user.setString(
+                "balance",
+                "${BitCoinFormat().decimalToDoge(user.getString("fakeBalance").toBigDecimal()).toPlainString()} DOGE"
+              )
+            }
+          }
+        } else if (BitCoinFormat().decimalToDoge(balanceValue) >= BigDecimal(100) && balanceValue <= balanceLimit) {
           runOnUiThread {
             user.setString("fakeBalance", "0")
             navigationView.menu.findItem(R.id.nav_withdraw).isVisible = false
@@ -176,13 +225,6 @@ class NavigationActivity : AppCompatActivity() {
             navigationView.menu.findItem(R.id.nav_marti_angel).isVisible = false
             user.setString("balance", "${BitCoinFormat().decimalToDoge(balanceValue).toPlainString()} DOGE terlalu tinggi")
           }
-        } else if (user.getBoolean("ifPlay")) {
-          runOnUiThread {
-            navigationView.menu.findItem(R.id.nav_withdraw).isVisible = false
-            navigationView.menu.findItem(R.id.nav_fibonacci).isVisible = false
-            navigationView.menu.findItem(R.id.nav_marti_angel).isVisible = false
-            user.setString("balance", "${BitCoinFormat().decimalToDoge(user.getString("fakeBalance").toBigDecimal()).toPlainString()} DOGE")
-          }
         } else {
           runOnUiThread {
             user.setString("fakeBalance", "0")
@@ -190,10 +232,7 @@ class NavigationActivity : AppCompatActivity() {
               BitCoinFormat().decimalToDoge(balanceValue) < BigDecimal(10000) && BitCoinFormat().decimalToDoge(balanceValue) > BigDecimal(0)
             navigationView.menu.findItem(R.id.nav_fibonacci).isVisible = false
             navigationView.menu.findItem(R.id.nav_marti_angel).isVisible = false
-            user.setString(
-              "balance",
-              "${BitCoinFormat().decimalToDoge(balanceValue).toPlainString()} DOGE terlalu kecil"
-            )
+            user.setString("balance", "${BitCoinFormat().decimalToDoge(balanceValue).toPlainString()} DOGE terlalu kecil")
           }
         }
         user.setString("balanceMax", "${BitCoinFormat().decimalToDoge(balanceLimit).toPlainString()} DOGE")

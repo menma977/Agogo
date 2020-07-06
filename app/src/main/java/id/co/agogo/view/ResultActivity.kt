@@ -42,7 +42,6 @@ class ResultActivity : AppCompatActivity() {
 
     uniqueCode = intent.getSerializableExtra("uniqueCode").toString()
     startBalance = intent.getSerializableExtra("startBalance").toString().toBigDecimal()
-    user.setString("fakeBalance", intent.getSerializableExtra("balanceRemaining").toString())
 
     sendDataToWeb()
   }

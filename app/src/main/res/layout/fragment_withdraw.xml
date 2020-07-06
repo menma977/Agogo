@@ -3,13 +3,62 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
   <ImageView
-      android:layout_width="wrap_content"
+      android:layout_width="match_parent"
+      android:layout_height="200dp"
+      app:srcCompat="@mipmap/ic_launcher_foreground"
+      android:contentDescription="@string/logo"/>
+
+  <TextView
+      android:text="@string/username"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      app:srcCompat="@drawable/ic_person_outline"
-      android:id="@+id/imageView"
-      android:layout_weight="1"/>
+      android:id="@+id/textViewUsername"
+      android:drawableStart="@drawable/ic_person_outline"
+      android:drawableTint="@color/colorAccent"
+      android:drawablePadding="15dp"
+      android:background="@drawable/edit_text"
+      android:layout_marginStart="30dp"
+      android:layout_marginEnd="30dp"
+      android:textColor="@color/colorAccent"
+      android:textStyle="bold"
+      android:gravity="start|center_vertical"/>
+
+  <Space
+    android:layout_width="match_parent"
+    android:layout_height="10dp"/>
+
+  <TextView
+      android:text="@string/balance"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:id="@+id/textViewBalance"
+      android:drawableStart="@drawable/ic_fiber_smart"
+      android:drawableTint="@color/colorAccent"
+      android:drawablePadding="15dp"
+      android:background="@drawable/edit_text"
+      android:layout_marginStart="30dp"
+      android:layout_marginEnd="30dp"
+      android:padding="5dp"
+      android:textColor="@color/colorAccent"
+      android:textStyle="bold"
+      android:gravity="start|center_vertical"/>
+
+  <Space
+      android:layout_width="match_parent"
+      android:layout_height="10dp"/>
+
+  <Button
+      android:text="@string/withdraw"
+      android:layout_width="150dp"
+      android:layout_height="wrap_content"
+      android:id="@+id/buttonWithdraw"
+      android:layout_margin="20dp"
+      android:layout_gravity="end"
+      android:background="@drawable/button_success"
+      android:textColor="@color/textSecondary"/>
 
 </LinearLayout>

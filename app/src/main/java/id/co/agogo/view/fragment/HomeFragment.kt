@@ -1,9 +1,6 @@
 package id.co.agogo.view.fragment
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
-import android.content.Intent
+import android.content.*
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -13,9 +10,13 @@ import android.widget.TextView
 import android.widget.Toast
 import id.co.agogo.MainActivity
 import id.co.agogo.R
+import id.co.agogo.config.BackgroundServiceBalance
 import id.co.agogo.config.Loading
 import id.co.agogo.model.User
 import id.co.agogo.view.NavigationActivity
+import java.util.*
+import kotlin.concurrent.schedule
+
 
 class HomeFragment : Fragment() {
   private lateinit var username: TextView
@@ -26,8 +27,10 @@ class HomeFragment : Fragment() {
   private lateinit var clipboardManager: ClipboardManager
   private lateinit var clipData: ClipData
   private lateinit var loading: Loading
-  private lateinit var goTo: Intent
+  private lateinit var parentActivity: NavigationActivity
   private lateinit var user: User
+  private lateinit var goTo: Intent
+  private lateinit var intentService: Intent
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     val root = inflater.inflate(R.layout.fragment_home, container, false)
@@ -37,7 +40,7 @@ class HomeFragment : Fragment() {
     balance = root.findViewById(R.id.textViewBalance)
     balanceMax = root.findViewById(R.id.textViewBalanceMax)
 
-    val parentActivity = activity as NavigationActivity
+    parentActivity = activity as NavigationActivity
 
     loading = Loading(parentActivity)
     user = User(parentActivity)
@@ -55,11 +58,35 @@ class HomeFragment : Fragment() {
     }
 
     balance.setOnClickListener {
-      goTo = Intent(parentActivity, MainActivity::class.java)
-      startActivity(goTo)
-      parentActivity.finishAffinity()
+      loading.openDialog()
+      Timer().schedule(1000) {
+        parentActivity.runOnUiThread {
+          intentService = Intent(parentActivity, BackgroundServiceBalance::class.java)
+          parentActivity.stopService(intentService)
+
+          goTo = Intent(parentActivity, MainActivity::class.java)
+          startActivity(goTo)
+          parentActivity.finishAffinity()
+          loading.closeDialog()
+        }
+      }
     }
 
+    val intentFilter = IntentFilter()
+    intentFilter.addAction("id.co.agogo")
+    parentActivity.registerReceiver(broadcastReceiver, intentFilter)
+
     return root
+  }
+
+  override fun onPause() {
+    super.onPause()
+    parentActivity.unregisterReceiver(broadcastReceiver)
+  }
+
+  private var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent) {
+      balance.text = user.getString("balance")
+    }
   }
 }
