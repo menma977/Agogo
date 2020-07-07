@@ -66,9 +66,6 @@ class LoginActivity : AppCompatActivity() {
     login = findViewById(R.id.buttonLogin)
     getAPK = findViewById(R.id.buttonWebDownloadAPK)
 
-    username.setText("agogo2")
-    password.setText("Qwerty123321")
-
     loading = Loading(this)
     user = User(this)
     config = Config(this)
@@ -113,7 +110,7 @@ class LoginActivity : AppCompatActivity() {
     getAPK.setOnClickListener {
       user.clear()
       config.clear()
-      goTo = Intent(Intent.ACTION_VIEW, Uri.parse("https://agogo.co.id/download"))
+      goTo = Intent(Intent.ACTION_VIEW, Uri.parse("https://agogo.co.id/apk/agogo.apk"))
       startActivity(goTo)
       finish()
     }
