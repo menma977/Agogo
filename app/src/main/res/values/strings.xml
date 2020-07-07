@@ -22,7 +22,7 @@
   <string name="error">Error 404</string>
   <string name="logout">Keluar</string>
   <string name="minimum_deposit">Setoran Minimum</string>
-  <string name="example_doge">10000.000000000 DOGE</string>
+  <string name="example_doge">10000.00000000 DOGE</string>
   <string name="maximum_deposit">Setoran Maximum</string>
 
   <string name="bot_list">Bot List</string>

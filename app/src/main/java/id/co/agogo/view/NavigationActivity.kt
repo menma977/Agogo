@@ -227,8 +227,9 @@ class NavigationActivity : AppCompatActivity() {
             navigationView.menu.findItem(R.id.nav_withdraw).isVisible = false
             navigationView.menu.findItem(R.id.nav_fibonacci).isVisible = false
             navigationView.menu.findItem(R.id.nav_marti_angel).isVisible = false
-            if (user.getString("fakeBalance").isEmpty()) {
+            if (balanceValue <= BigDecimal(0)) {
               user.setString("balance", "${BitCoinFormat().decimalToDoge(balanceValue).toPlainString()} DOGE")
+              user.setString("fakeBalance", "0")
             } else {
               user.setString(
                 "balance",

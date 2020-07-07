@@ -55,6 +55,9 @@ class DogeController(private var body: HashMap<String, String>) : AsyncTask<Void
             convertJSON.toString().contains("error") -> {
               JSONObject().put("code", 404).put("data", "Invalid request")
             }
+            convertJSON.toString().contains("TooFast") -> {
+              JSONObject().put("code", 404).put("data", "Too Fast")
+            }
             else -> {
               JSONObject().put("code", 200).put("data", convertJSON)
             }

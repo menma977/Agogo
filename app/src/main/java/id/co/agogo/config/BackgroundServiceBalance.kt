@@ -52,44 +52,59 @@ class BackgroundServiceBalance : IntentService("BackgroundServiceBalance") {
           } else {
             response = DogeController(body).execute().get()
             if (response["code"] == 200) {
-              balanceValue = response.getJSONObject("data")["Balance"].toString().toBigDecimal()
-              val balanceLimit = if (user.getString("limitDeposit").isEmpty()) {
-                BitCoinFormat().dogeToDecimal(limitDepositDefault)
-              } else {
-                BitCoinFormat().dogeToDecimal(user.getString("limitDeposit").toBigDecimal())
-              }
-              /** declaration Intent From Broadcast */
-              val privateIntent = Intent()
-              if (!user.getBoolean("ifPlay")) {
-                if (BitCoinFormat().decimalToDoge(balanceValue) >= BigDecimal(1000) && balanceValue <= balanceLimit) {
-                  privateIntent.putExtra("nav_withdraw", false)
-                  privateIntent.putExtra("nav_fibonacci", true)
-                  privateIntent.putExtra("nav_marti_angel", true)
-                  user.setString("balance", "${BitCoinFormat().decimalToDoge(balanceValue).toPlainString()} DOGE")
-                } else if (balanceValue > balanceLimit) {
-                  privateIntent.putExtra("nav_withdraw", true)
-                  privateIntent.putExtra("nav_fibonacci", false)
-                  privateIntent.putExtra("nav_marti_angel", false)
-                  user.setString("balance", "${BitCoinFormat().decimalToDoge(balanceValue).toPlainString()} DOGE terlalu tinggi")
+              try {
+                balanceValue = response.getJSONObject("data")["Balance"].toString().toBigDecimal()
+                val balanceLimit = if (user.getString("limitDeposit").isEmpty()) {
+                  BitCoinFormat().dogeToDecimal(limitDepositDefault)
                 } else {
-                  if (BitCoinFormat().decimalToDoge(balanceValue) < BigDecimal(10000) && BitCoinFormat().decimalToDoge(balanceValue) > BigDecimal(0)) {
-                    privateIntent.putExtra("nav_withdraw", true)
-                  } else {
+                  BitCoinFormat().dogeToDecimal(user.getString("limitDeposit").toBigDecimal())
+                }
+                /** declaration Intent From Broadcast */
+                val privateIntent = Intent()
+                if (!user.getBoolean("ifPlay")) {
+                  if (BitCoinFormat().decimalToDoge(balanceValue) >= BigDecimal(10000) && balanceValue <= balanceLimit) {
                     privateIntent.putExtra("nav_withdraw", false)
+                    privateIntent.putExtra("nav_fibonacci", true)
+                    privateIntent.putExtra("nav_marti_angel", true)
+                    user.setString("balance", "${BitCoinFormat().decimalToDoge(balanceValue).toPlainString()} DOGE")
+                    user.setString("fakeBalance", "0")
+                  } else if (balanceValue > balanceLimit) {
+                    privateIntent.putExtra("nav_withdraw", true)
+                    privateIntent.putExtra("nav_fibonacci", false)
+                    privateIntent.putExtra("nav_marti_angel", false)
+                    user.setString("balance", "${BitCoinFormat().decimalToDoge(balanceValue).toPlainString()} DOGE terlalu tinggi")
+                    user.setString("fakeBalance", "0")
+                  } else {
+                    if (BitCoinFormat().decimalToDoge(balanceValue) < BigDecimal(10000) && BitCoinFormat().decimalToDoge(balanceValue) > BigDecimal(0)) {
+                      privateIntent.putExtra("nav_withdraw", true)
+                    } else {
+                      privateIntent.putExtra("nav_withdraw", false)
+                    }
+                    privateIntent.putExtra("nav_fibonacci", false)
+                    privateIntent.putExtra("nav_marti_angel", false)
+                    user.setString("balance", "${BitCoinFormat().decimalToDoge(balanceValue).toPlainString()} DOGE terlalu kecil")
+                    user.setString("fakeBalance", "0")
                   }
+                } else {
+                  privateIntent.putExtra("nav_withdraw", false)
                   privateIntent.putExtra("nav_fibonacci", false)
                   privateIntent.putExtra("nav_marti_angel", false)
-                  user.setString("balance", "${BitCoinFormat().decimalToDoge(balanceValue).toPlainString()} DOGE terlalu kecil")
+                  if (balanceValue <= BigDecimal(0)) {
+                    user.setString("balance", "${BitCoinFormat().decimalToDoge(balanceValue).toPlainString()} DOGE")
+                    user.setString("fakeBalance", "0")
+                  } else {
+                    user.setString(
+                      "balance",
+                      "${BitCoinFormat().decimalToDoge(user.getString("fakeBalance").toBigDecimal()).toPlainString()} DOGE"
+                    )
+                  }
                 }
-              } else {
-                privateIntent.putExtra("nav_withdraw", false)
-                privateIntent.putExtra("nav_fibonacci", false)
-                privateIntent.putExtra("nav_marti_angel", false)
-                user.setString("fakeBalance", "0")
+                /** start Broadcast */
+                privateIntent.action = "id.co.agogo"
+                sendBroadcast(privateIntent)
+              }catch (e : Exception) {
+                trigger.wait(60000)
               }
-              /** start Broadcast */
-              privateIntent.action = "id.co.agogo"
-              sendBroadcast(privateIntent)
             } else {
               trigger.wait(60000)
             }

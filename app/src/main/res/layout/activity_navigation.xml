@@ -8,7 +8,8 @@
     android:id="@+id/drawer_layout"
     android:fitsSystemWindows="true"
     tools:context=".view.NavigationActivity"
-    tools:openDrawer="start">
+    tools:openDrawer="start"
+    android:keepScreenOn="true">
 
   <LinearLayout
       android:orientation="vertical"

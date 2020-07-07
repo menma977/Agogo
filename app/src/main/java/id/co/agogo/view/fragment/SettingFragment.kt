@@ -11,6 +11,13 @@ import id.co.agogo.config.Loading
 import id.co.agogo.model.Config
 import id.co.agogo.view.NavigationActivity
 
+/**
+ * class SettingFragment
+ * @property activeChart Switch
+ * @property activeProgressBar Switch
+ * @property loading Loading
+ * @property config Config
+ */
 class SettingFragment : Fragment() {
   private lateinit var activeChart: Switch
   private lateinit var activeProgressBar: Switch
@@ -18,6 +25,13 @@ class SettingFragment : Fragment() {
   private lateinit var loading: Loading
   private lateinit var config: Config
 
+  /**
+   * override fun onCreateView
+   * @param inflater LayoutInflater
+   * @param container ViewGroup?
+   * @param savedInstanceState Bundle?
+   * @return View?
+   */
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     val root = inflater.inflate(R.layout.fragment_setting, container, false)
 
