@@ -47,6 +47,7 @@ class BackgroundServiceBalance : IntentService("BackgroundServiceBalance") {
         val delta = System.currentTimeMillis() - time
         if (delta >= 5000) {
           time = System.currentTimeMillis()
+
           if (isStopService) {
             break
           } else {
