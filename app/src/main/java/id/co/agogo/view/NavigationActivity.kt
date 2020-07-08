@@ -15,10 +15,7 @@ import android.widget.TextView
 import android.widget.Toast
 import id.co.agogo.MainActivity
 import id.co.agogo.R
-import id.co.agogo.config.BackgroundServiceBalance
-import id.co.agogo.config.BitCoinFormat
-import id.co.agogo.config.Loading
-import id.co.agogo.config.MD5
+import id.co.agogo.config.*
 import id.co.agogo.controller.DogeController
 import id.co.agogo.controller.WebController
 import id.co.agogo.model.Config
@@ -74,6 +71,7 @@ class NavigationActivity : AppCompatActivity() {
   private lateinit var balanceValue: BigDecimal
   private lateinit var uniqueCode: String
   private lateinit var intentService: Intent
+  private lateinit var intentService2: Intent
 
   private var limitDepositDefault = BigDecimal(0.000000000, MathContext.DECIMAL32).setScale(8, BigDecimal.ROUND_HALF_DOWN)
 
@@ -92,11 +90,6 @@ class NavigationActivity : AppCompatActivity() {
     loading = Loading(this)
     user = User(this)
     config = Config(this)
-
-    /** declaration dan start service */
-    intentService = Intent(this, BackgroundServiceBalance::class.java)
-    intentService.putExtra("key", user.getString("key"))
-    startService(intentService)
 
     val headerView = navigationView.getHeaderView(0)
     username = headerView.findViewById(R.id.textViewUsernameSide)
@@ -122,6 +115,16 @@ class NavigationActivity : AppCompatActivity() {
   /** start Broadcast */
   override fun onStart() {
     super.onStart()
+
+    /** declaration dan start service */
+    intentService = Intent(this, BackgroundServiceBalance::class.java)
+    intentService.putExtra("key", user.getString("key"))
+    startService(intentService)
+
+    /** declaration dan start service */
+    intentService2 = Intent(this, BackgroundServiceUserPlay::class.java)
+    startService(intentService2)
+
     val intentFilter = IntentFilter()
     intentFilter.addAction("id.co.agogo")
     registerReceiver(broadcastReceiver, intentFilter)
@@ -132,6 +135,7 @@ class NavigationActivity : AppCompatActivity() {
     super.onStop()
     unregisterReceiver(broadcastReceiver)
     stopService(intentService)
+    stopService(intentService2)
   }
 
   /** stop Broadcast and service. return to home */
@@ -140,6 +144,7 @@ class NavigationActivity : AppCompatActivity() {
       drawerLayout.closeDrawer(GravityCompat.START)
     } else {
       stopService(intentService)
+      stopService(intentService2)
       super.onBackPressed()
     }
   }
