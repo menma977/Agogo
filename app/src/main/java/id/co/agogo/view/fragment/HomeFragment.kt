@@ -114,7 +114,6 @@ class HomeFragment : Fragment() {
   private var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
       balance.text = user.getString("balance")
-      balanceMax.text = user.getString("balanceMax")
     }
   }
 }

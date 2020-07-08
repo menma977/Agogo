@@ -71,7 +71,6 @@ class NavigationActivity : AppCompatActivity() {
   private lateinit var balanceValue: BigDecimal
   private lateinit var uniqueCode: String
   private lateinit var intentService: Intent
-  private lateinit var intentService2: Intent
 
   private var limitDepositDefault = BigDecimal(0.000000000, MathContext.DECIMAL32).setScale(8, BigDecimal.ROUND_HALF_DOWN)
 
@@ -97,13 +96,7 @@ class NavigationActivity : AppCompatActivity() {
 
     toolbar.title = ""
     setSupportActionBar(toolbar)
-    val toggle = ActionBarDrawerToggle(
-      this,
-      drawerLayout,
-      toolbar,
-      R.string.navigation_drawer_open,
-      R.string.navigation_drawer_close
-    )
+    val toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
     drawerLayout.addDrawerListener(toggle)
     toggle.syncState()
 
@@ -121,10 +114,6 @@ class NavigationActivity : AppCompatActivity() {
     intentService.putExtra("key", user.getString("key"))
     startService(intentService)
 
-    /** declaration dan start service */
-    intentService2 = Intent(this, BackgroundServiceUserPlay::class.java)
-    startService(intentService2)
-
     val intentFilter = IntentFilter()
     intentFilter.addAction("id.co.agogo")
     registerReceiver(broadcastReceiver, intentFilter)
@@ -135,7 +124,6 @@ class NavigationActivity : AppCompatActivity() {
     super.onStop()
     unregisterReceiver(broadcastReceiver)
     stopService(intentService)
-    stopService(intentService2)
   }
 
   /** stop Broadcast and service. return to home */
@@ -144,7 +132,6 @@ class NavigationActivity : AppCompatActivity() {
       drawerLayout.closeDrawer(GravityCompat.START)
     } else {
       stopService(intentService)
-      stopService(intentService2)
       super.onBackPressed()
     }
   }
