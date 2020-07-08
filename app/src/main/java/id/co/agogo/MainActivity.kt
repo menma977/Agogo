@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
   private fun isLogin(data: JSONObject) {
     user.setString("wallet", data.getJSONObject("data")["walletdepo"].toString())
     user.setString("limitDeposit", data.getJSONObject("data")["maxdepo"].toString())
-    user.setBoolean("ifPlay", response.getJSONObject("data")["adamain"].toString().toBoolean())
+    user.setBoolean("ifPlay", data.getJSONObject("data")["adamain"].toString().toBoolean())
     goTo = Intent(applicationContext, NavigationActivity::class.java)
     runOnUiThread {
       startActivity(goTo)
