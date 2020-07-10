@@ -205,77 +205,80 @@ class NavigationActivity : AppCompatActivity() {
     body["Currency"] = "doge"
     body["Referrals"] = "0"
     body["Stats"] = "0"
-    Timer().schedule(100) {
-      response = DogeController(body).execute().get()
-      if (response["code"] == 200) {
-        balanceValue = response.getJSONObject("data")["Balance"].toString().toBigDecimal()
-        val balanceLimit = if (user.getString("limitDeposit").isEmpty()) {
-          BitCoinFormat().dogeToDecimal(limitDepositDefault)
-        } else {
-          BitCoinFormat().dogeToDecimal(user.getString("limitDeposit").toBigDecimal())
-        }
-        if (user.getBoolean("ifPlay")) {
-          runOnUiThread {
-            navigationView.menu.findItem(R.id.nav_withdraw).isVisible = false
-            navigationView.menu.findItem(R.id.nav_fibonacci).isVisible = false
-            navigationView.menu.findItem(R.id.nav_marti_angel).isVisible = false
-            if (balanceValue <= BigDecimal(0)) {
-              user.setString("balance", "${BitCoinFormat().decimalToDoge(balanceValue).toPlainString()} DOGE")
-              user.setString("fakeBalance", "0")
-            } else {
+    response = DogeController(body).execute().get()
+    if (response["code"] == 200) {
+      balanceValue = response.getJSONObject("data")["Balance"].toString().toBigDecimal()
+      val balanceLimit = if (user.getString("limitDeposit").isEmpty()) {
+        BitCoinFormat().dogeToDecimal(limitDepositDefault)
+      } else {
+        BitCoinFormat().dogeToDecimal(user.getString("limitDeposit").toBigDecimal())
+      }
+      if (user.getBoolean("ifPlay")) {
+        runOnUiThread {
+          println(user.getString("fakeBalance"))
+          navigationView.menu.findItem(R.id.nav_withdraw).isVisible = false
+          navigationView.menu.findItem(R.id.nav_fibonacci).isVisible = false
+          navigationView.menu.findItem(R.id.nav_marti_angel).isVisible = false
+          if (balanceValue <= BigDecimal(0) || user.getString("fakeBalance").isEmpty() || user.getString("fakeBalance") == "0") {
+            user.setString("balance", "${BitCoinFormat().decimalToDoge(balanceValue).toPlainString()} DOGE")
+            user.setString("fakeBalance", "0")
+          } else {
+            try {
               user.setString(
                 "balance",
                 "${BitCoinFormat().decimalToDoge(user.getString("fakeBalance").toBigDecimal()).toPlainString()} DOGE"
               )
+            } catch (e: Exception) {
+              user.setString("balance", "${BitCoinFormat().decimalToDoge(balanceValue).toPlainString()} DOGE")
             }
           }
-        } else if (BitCoinFormat().decimalToDoge(balanceValue) >= BigDecimal(10000) && balanceValue <= balanceLimit) {
-          runOnUiThread {
-            user.setString("fakeBalance", "0")
-            navigationView.menu.findItem(R.id.nav_withdraw).isVisible = false
-            navigationView.menu.findItem(R.id.nav_fibonacci).isVisible = true
-            navigationView.menu.findItem(R.id.nav_marti_angel).isVisible = true
-            user.setString("balance", "${BitCoinFormat().decimalToDoge(balanceValue).toPlainString()} DOGE")
-          }
-        } else if (balanceValue > balanceLimit) {
-          runOnUiThread {
-            user.setString("fakeBalance", "0")
-            navigationView.menu.findItem(R.id.nav_withdraw).isVisible = true
-            navigationView.menu.findItem(R.id.nav_fibonacci).isVisible = false
-            navigationView.menu.findItem(R.id.nav_marti_angel).isVisible = false
-            user.setString("balance", "${BitCoinFormat().decimalToDoge(balanceValue).toPlainString()} DOGE terlalu tinggi")
-          }
-        } else {
-          runOnUiThread {
-            user.setString("fakeBalance", "0")
-            navigationView.menu.findItem(R.id.nav_withdraw).isVisible =
-              BitCoinFormat().decimalToDoge(balanceValue) < BigDecimal(10000) && BitCoinFormat().decimalToDoge(balanceValue) > BigDecimal(0)
-            navigationView.menu.findItem(R.id.nav_fibonacci).isVisible = false
-            navigationView.menu.findItem(R.id.nav_marti_angel).isVisible = false
-            user.setString("balance", "${BitCoinFormat().decimalToDoge(balanceValue).toPlainString()} DOGE terlalu kecil")
-          }
         }
-        user.setString("balanceMax", "${BitCoinFormat().decimalToDoge(balanceLimit).toPlainString()} DOGE")
-      } else {
+      } else if (BitCoinFormat().decimalToDoge(balanceValue) >= BigDecimal(10000) && balanceValue <= balanceLimit) {
         runOnUiThread {
+          user.setString("fakeBalance", "0")
           navigationView.menu.findItem(R.id.nav_withdraw).isVisible = false
+          navigationView.menu.findItem(R.id.nav_fibonacci).isVisible = true
+          navigationView.menu.findItem(R.id.nav_marti_angel).isVisible = true
+          user.setString("balance", "${BitCoinFormat().decimalToDoge(balanceValue).toPlainString()} DOGE")
+        }
+      } else if (balanceValue > balanceLimit) {
+        runOnUiThread {
+          user.setString("fakeBalance", "0")
+          navigationView.menu.findItem(R.id.nav_withdraw).isVisible = true
           navigationView.menu.findItem(R.id.nav_fibonacci).isVisible = false
           navigationView.menu.findItem(R.id.nav_marti_angel).isVisible = false
-          user.setString("balance", "ERROR 404")
-          user.setString("balanceMax", "${BigDecimal(0)} DOGE")
+          user.setString("balance", "${BitCoinFormat().decimalToDoge(balanceValue).toPlainString()} DOGE terlalu tinggi")
+        }
+      } else {
+        runOnUiThread {
+          user.setString("fakeBalance", "0")
+          navigationView.menu.findItem(R.id.nav_withdraw).isVisible =
+            BitCoinFormat().decimalToDoge(balanceValue) < BigDecimal(10000) && BitCoinFormat().decimalToDoge(balanceValue) > BigDecimal(0)
+          navigationView.menu.findItem(R.id.nav_fibonacci).isVisible = false
+          navigationView.menu.findItem(R.id.nav_marti_angel).isVisible = false
+          user.setString("balance", "${BitCoinFormat().decimalToDoge(balanceValue).toPlainString()} DOGE terlalu kecil")
         }
       }
-
+      user.setString("balanceMax", "${BitCoinFormat().decimalToDoge(balanceLimit).toPlainString()} DOGE")
+    } else {
       runOnUiThread {
-        username.text = user.getString("usernameWeb")
-        balance.text = user.getString("balance")
-        loading.closeDialog()
+        navigationView.menu.findItem(R.id.nav_withdraw).isVisible = false
+        navigationView.menu.findItem(R.id.nav_fibonacci).isVisible = false
+        navigationView.menu.findItem(R.id.nav_marti_angel).isVisible = false
+        user.setString("balance", "ERROR 404")
+        user.setString("balanceMax", "${BigDecimal(0)} DOGE")
+      }
+    }
 
-        if (savedInstanceState == null) {
-          supportFragmentManager.beginTransaction().replace(R.id.frameContainer, HomeFragment()).commit()
-          navigationView.setCheckedItem(R.id.nav_home)
-          toolbar.title = navigationView.menu.findItem(R.id.nav_home).title
-        }
+    runOnUiThread {
+      username.text = user.getString("usernameWeb")
+      balance.text = user.getString("balance")
+      loading.closeDialog()
+
+      if (savedInstanceState == null) {
+        supportFragmentManager.beginTransaction().replace(R.id.frameContainer, HomeFragment()).commit()
+        navigationView.setCheckedItem(R.id.nav_home)
+        toolbar.title = navigationView.menu.findItem(R.id.nav_home).title
       }
     }
   }

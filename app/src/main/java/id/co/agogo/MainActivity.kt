@@ -134,7 +134,7 @@ class MainActivity : AppCompatActivity() {
     goTo = Intent(applicationContext, LoginActivity::class.java)
     goTo.putExtra("lock", true)
     goTo.putExtra("newAPK", true)
-    goTo.putExtra("version", "Version ${BuildConfig.VERSION_NAME} New Version $newVersion")
+    goTo.putExtra("version", "Version ${BuildConfig.VERSION_NAME} New Version Code $newVersion")
     goTo.putExtra("massage", "ada aplikasi baru silakan perbarui")
     runOnUiThread {
       startActivity(goTo)
