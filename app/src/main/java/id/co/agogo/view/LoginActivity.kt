@@ -20,7 +20,6 @@ import id.co.agogo.controller.WebController
 import id.co.agogo.model.Config
 import id.co.agogo.model.User
 import org.json.JSONObject
-import java.lang.Exception
 import java.util.*
 import kotlin.concurrent.schedule
 
@@ -143,11 +142,7 @@ class LoginActivity : AppCompatActivity() {
             loginDoge(response)
           } else {
             runOnUiThread {
-              try {
-                Toast.makeText(applicationContext, response.getJSONObject("data")["Pesan"].toString(), Toast.LENGTH_SHORT).show()
-              } catch (e: Exception) {
-                Toast.makeText(applicationContext, response["data"].toString(), Toast.LENGTH_SHORT).show()
-              }
+              Toast.makeText(applicationContext, response["data"].toString(), Toast.LENGTH_SHORT).show()
               loading.closeDialog()
             }
           }
