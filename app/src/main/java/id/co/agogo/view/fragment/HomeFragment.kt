@@ -94,7 +94,6 @@ class HomeFragment : Fragment() {
   private var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
       balance.text = user.getString("balance")
-      println("balance HOME : ${user.getString("balance")} paly : ${user.getBoolean("ifPlay")}")
     }
   }
 }
