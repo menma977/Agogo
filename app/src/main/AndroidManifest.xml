@@ -16,6 +16,9 @@
       android:theme="@style/AppTheme">
 
     <service
+        android:name=".config.BackgroundServiceUserPlay"/>
+
+    <service
         android:name=".config.BackgroundServiceBalance"/>
 
     <activity

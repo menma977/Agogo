@@ -3,19 +3,16 @@ package id.co.agogo.view.fragment
 import android.content.*
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.LocalBroadcastManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
-import id.co.agogo.MainActivity
 import id.co.agogo.R
-import id.co.agogo.config.BackgroundServiceBalance
 import id.co.agogo.config.Loading
 import id.co.agogo.model.User
 import id.co.agogo.view.NavigationActivity
-import java.util.*
-import kotlin.concurrent.schedule
 
 /**
  * class HomeFragment
@@ -78,42 +75,26 @@ class HomeFragment : Fragment() {
       Toast.makeText(parentActivity, "Dompet Doge telah disalin", Toast.LENGTH_LONG).show()
     }
 
-    balance.setOnClickListener {
-      loading.openDialog()
-      Timer().schedule(1000) {
-        parentActivity.runOnUiThread {
-          intentService = Intent(parentActivity, BackgroundServiceBalance::class.java)
-          parentActivity.stopService(intentService)
-
-          goTo = Intent(parentActivity, MainActivity::class.java)
-          startActivity(goTo)
-          parentActivity.finishAffinity()
-          loading.closeDialog()
-        }
-      }
-    }
-
     return root
   }
 
   /** start Broadcast */
   override fun onResume() {
+    LocalBroadcastManager.getInstance(parentActivity.applicationContext).registerReceiver(broadcastReceiver, IntentFilter("id.co.agogo"))
     super.onResume()
-    val intentFilter = IntentFilter()
-    intentFilter.addAction("id.co.agogo")
-    parentActivity.registerReceiver(broadcastReceiver, intentFilter)
   }
 
   /** stop Broadcast */
-  override fun onPause() {
-    super.onPause()
-    parentActivity.unregisterReceiver(broadcastReceiver)
+  override fun onDestroy() {
+    LocalBroadcastManager.getInstance(parentActivity.applicationContext).unregisterReceiver(broadcastReceiver)
+    super.onDestroy()
   }
 
   /** declaration broadcastReceiver */
   private var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
       balance.text = user.getString("balance")
+      println("balance HOME : ${user.getString("balance")} paly : ${user.getBoolean("ifPlay")}")
     }
   }
 }

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.support.design.widget.NavigationView
+import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
@@ -52,7 +53,7 @@ import id.co.agogo.view.bot.martiAngel.BotProgressBarGoneActivity as BotMartiAng
  * @property goTo Intent
  * @property balanceValue BigDecimal
  * @property uniqueCode String
- * @property intentService Intent
+ * @property intentServiceBalance Intent
  * @property limitDepositDefault (java.math.BigDecimal..java.math.BigDecimal?)
  * @property broadcastReceiver BroadcastReceiver
  */
@@ -70,7 +71,8 @@ class NavigationActivity : AppCompatActivity() {
   private lateinit var goTo: Intent
   private lateinit var balanceValue: BigDecimal
   private lateinit var uniqueCode: String
-  private lateinit var intentService: Intent
+  private lateinit var intentServiceBalance: Intent
+  private lateinit var intentServiceUserPlay: Intent
 
   private var limitDepositDefault = BigDecimal(0.000000000, MathContext.DECIMAL32).setScale(8, BigDecimal.ROUND_HALF_DOWN)
 
@@ -107,23 +109,25 @@ class NavigationActivity : AppCompatActivity() {
 
   /** start Broadcast */
   override fun onStart() {
-    super.onStart()
-
     /** declaration dan start service */
-    intentService = Intent(this, BackgroundServiceBalance::class.java)
-    intentService.putExtra("key", user.getString("key"))
-    startService(intentService)
+    intentServiceBalance = Intent(this, BackgroundServiceBalance::class.java)
+    intentServiceBalance.putExtra("key", user.getString("key"))
+    startService(intentServiceBalance)
 
-    val intentFilter = IntentFilter()
-    intentFilter.addAction("id.co.agogo")
-    registerReceiver(broadcastReceiver, intentFilter)
+    intentServiceUserPlay = Intent(this, BackgroundServiceUserPlay::class.java)
+    startService(intentServiceUserPlay)
+
+    LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, IntentFilter("id.co.agogo"))
+
+    super.onStart()
   }
 
   /** stop Broadcast and service */
   override fun onStop() {
+    LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
+    stopService(intentServiceBalance)
+    stopService(intentServiceUserPlay)
     super.onStop()
-    unregisterReceiver(broadcastReceiver)
-    stopService(intentService)
   }
 
   /** stop Broadcast and service. return to home */
@@ -131,7 +135,8 @@ class NavigationActivity : AppCompatActivity() {
     if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
       drawerLayout.closeDrawer(GravityCompat.START)
     } else {
-      stopService(intentService)
+      stopService(intentServiceBalance)
+      stopService(intentServiceUserPlay)
       super.onBackPressed()
     }
   }
@@ -143,6 +148,7 @@ class NavigationActivity : AppCompatActivity() {
       navigationView.menu.findItem(R.id.nav_fibonacci).isVisible = intent.getBooleanExtra("nav_fibonacci", false)
       navigationView.menu.findItem(R.id.nav_marti_angel).isVisible = intent.getBooleanExtra("nav_marti_angel", false)
       balance.text = user.getString("balance")
+      println("balance Navigation : ${user.getString("balance")} paly : ${user.getBoolean("ifPlay")}")
     }
   }
 
@@ -215,7 +221,6 @@ class NavigationActivity : AppCompatActivity() {
       }
       if (user.getBoolean("ifPlay")) {
         runOnUiThread {
-          println(user.getString("fakeBalance"))
           navigationView.menu.findItem(R.id.nav_withdraw).isVisible = false
           navigationView.menu.findItem(R.id.nav_fibonacci).isVisible = false
           navigationView.menu.findItem(R.id.nav_marti_angel).isVisible = false
@@ -224,10 +229,7 @@ class NavigationActivity : AppCompatActivity() {
             user.setString("fakeBalance", "0")
           } else {
             try {
-              user.setString(
-                "balance",
-                "${BitCoinFormat().decimalToDoge(user.getString("fakeBalance").toBigDecimal()).toPlainString()} DOGE"
-              )
+              user.setString("balance", "${BitCoinFormat().decimalToDoge(user.getString("fakeBalance").toBigDecimal()).toPlainString()} DOGE")
             } catch (e: Exception) {
               user.setString("balance", "${BitCoinFormat().decimalToDoge(balanceValue).toPlainString()} DOGE")
             }
