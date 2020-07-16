@@ -14,6 +14,7 @@ import java.math.MathContext
  * @property response JSONObject
  * @property balanceValue BigDecimal
  * @property user User
+ * @property startBackgroundService Boolean
  * @property limitDepositDefault (java.math.BigDecimal..java.math.BigDecimal?)
  */
 class BackgroundServiceBalance : IntentService("BackgroundServiceBalance") {
