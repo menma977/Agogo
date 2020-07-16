@@ -148,7 +148,6 @@ class NavigationActivity : AppCompatActivity() {
       navigationView.menu.findItem(R.id.nav_fibonacci).isVisible = intent.getBooleanExtra("nav_fibonacci", false)
       navigationView.menu.findItem(R.id.nav_marti_angel).isVisible = intent.getBooleanExtra("nav_marti_angel", false)
       balance.text = user.getString("balance")
-      println("balance Navigation : ${user.getString("balance")} paly : ${user.getBoolean("ifPlay")}")
     }
   }
 
