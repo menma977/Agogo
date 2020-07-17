@@ -62,6 +62,9 @@ class BackgroundServiceBalance : IntentService("BackgroundServiceBalance") {
 
                 /** declaration Intent From Broadcast */
                 val privateIntent = Intent()
+
+                privateIntent.putExtra("balance", balanceValue.toPlainString())
+
                 if (!user.getBoolean("ifPlay")) {
                   if (BitCoinFormat().decimalToDoge(balanceValue) >= BigDecimal(10000) && balanceValue <= balanceLimit) {
                     privateIntent.putExtra("nav_withdraw", false)
@@ -101,6 +104,8 @@ class BackgroundServiceBalance : IntentService("BackgroundServiceBalance") {
                     }
                   }
                 }
+
+                user.setString("balanceMax", "${BitCoinFormat().decimalToDoge(balanceLimit).toPlainString()} DOGE")
 
                 /** start Broadcast */
                 privateIntent.action = "id.co.agogo"

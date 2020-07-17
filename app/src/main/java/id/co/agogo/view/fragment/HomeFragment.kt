@@ -13,6 +13,8 @@ import id.co.agogo.R
 import id.co.agogo.config.Loading
 import id.co.agogo.model.User
 import id.co.agogo.view.NavigationActivity
+import java.util.*
+import kotlin.concurrent.schedule
 
 /**
  * class HomeFragment
@@ -75,6 +77,15 @@ class HomeFragment : Fragment() {
       Toast.makeText(parentActivity, "Dompet Doge telah disalin", Toast.LENGTH_LONG).show()
     }
 
+    balance.setOnClickListener {
+      loading.openDialog()
+      Timer().schedule(5000) {
+        parentActivity.runOnUiThread {
+          loading.closeDialog()
+        }
+      }
+    }
+
     return root
   }
 
@@ -94,6 +105,7 @@ class HomeFragment : Fragment() {
   private var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
       balance.text = user.getString("balance")
+      balanceMax.text = user.getString("balanceMax")
     }
   }
 }

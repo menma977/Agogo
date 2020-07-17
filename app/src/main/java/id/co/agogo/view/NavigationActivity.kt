@@ -70,6 +70,7 @@ class NavigationActivity : AppCompatActivity() {
   private lateinit var response: JSONObject
   private lateinit var goTo: Intent
   private lateinit var balanceValue: BigDecimal
+  private lateinit var balanceLimitValue : BigDecimal
   private lateinit var uniqueCode: String
   private lateinit var intentServiceBalance: Intent
   private lateinit var intentServiceUserPlay: Intent
@@ -109,15 +110,17 @@ class NavigationActivity : AppCompatActivity() {
 
   /** start Broadcast */
   override fun onStart() {
-    /** declaration dan start service */
-    intentServiceBalance = Intent(this, BackgroundServiceBalance::class.java)
-    intentServiceBalance.putExtra("key", user.getString("key"))
-    startService(intentServiceBalance)
+    Timer().schedule(1000) {
+      /** declaration dan start service */
+      intentServiceBalance = Intent(applicationContext, BackgroundServiceBalance::class.java)
+      intentServiceBalance.putExtra("key", user.getString("key"))
+      startService(intentServiceBalance)
 
-    intentServiceUserPlay = Intent(this, BackgroundServiceUserPlay::class.java)
-    startService(intentServiceUserPlay)
+      intentServiceUserPlay = Intent(applicationContext, BackgroundServiceUserPlay::class.java)
+      startService(intentServiceUserPlay)
 
-    LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, IntentFilter("id.co.agogo"))
+      LocalBroadcastManager.getInstance(applicationContext).registerReceiver(broadcastReceiver, IntentFilter("id.co.agogo"))
+    }
 
     super.onStart()
   }
@@ -147,6 +150,7 @@ class NavigationActivity : AppCompatActivity() {
       navigationView.menu.findItem(R.id.nav_withdraw).isVisible = intent.getBooleanExtra("nav_withdraw", false)
       navigationView.menu.findItem(R.id.nav_fibonacci).isVisible = intent.getBooleanExtra("nav_fibonacci", false)
       navigationView.menu.findItem(R.id.nav_marti_angel).isVisible = intent.getBooleanExtra("nav_marti_angel", false)
+      balanceValue = intent.getStringExtra("balance").toBigDecimal()
       balance.text = user.getString("balance")
     }
   }
@@ -174,11 +178,19 @@ class NavigationActivity : AppCompatActivity() {
           true
         }
         R.id.nav_fibonacci -> {
-          startBotFibonacci()
+          if (BitCoinFormat().decimalToDoge(balanceValue) >= BigDecimal(10000) && balanceValue <= balanceLimitValue) {
+            startBotFibonacci()
+          } else {
+            Toast.makeText(this, "Saldo tidak sesuai minimum/maximum", Toast.LENGTH_LONG).show()
+          }
           true
         }
         R.id.nav_marti_angel -> {
-          startBotMartiAngel()
+          if (BitCoinFormat().decimalToDoge(balanceValue) >= BigDecimal(10000) && balanceValue <= balanceLimitValue) {
+            startBotMartiAngel()
+          } else {
+            Toast.makeText(this, "Saldo tidak sesuai minimum/maximum", Toast.LENGTH_LONG).show()
+          }
           true
         }
         R.id.nav_logout -> {
@@ -213,7 +225,7 @@ class NavigationActivity : AppCompatActivity() {
     response = DogeController(body).execute().get()
     if (response["code"] == 200) {
       balanceValue = response.getJSONObject("data")["Balance"].toString().toBigDecimal()
-      val balanceLimit = if (user.getString("limitDeposit").isEmpty()) {
+      balanceLimitValue = if (user.getString("limitDeposit").isEmpty()) {
         BitCoinFormat().dogeToDecimal(limitDepositDefault)
       } else {
         BitCoinFormat().dogeToDecimal(user.getString("limitDeposit").toBigDecimal())
@@ -234,7 +246,7 @@ class NavigationActivity : AppCompatActivity() {
             }
           }
         }
-      } else if (BitCoinFormat().decimalToDoge(balanceValue) >= BigDecimal(10000) && balanceValue <= balanceLimit) {
+      } else if (BitCoinFormat().decimalToDoge(balanceValue) >= BigDecimal(10000) && balanceValue <= balanceLimitValue) {
         runOnUiThread {
           user.setString("fakeBalance", "0")
           navigationView.menu.findItem(R.id.nav_withdraw).isVisible = false
@@ -242,7 +254,7 @@ class NavigationActivity : AppCompatActivity() {
           navigationView.menu.findItem(R.id.nav_marti_angel).isVisible = true
           user.setString("balance", "${BitCoinFormat().decimalToDoge(balanceValue).toPlainString()} DOGE")
         }
-      } else if (balanceValue > balanceLimit) {
+      } else if (balanceValue > balanceLimitValue) {
         runOnUiThread {
           user.setString("fakeBalance", "0")
           navigationView.menu.findItem(R.id.nav_withdraw).isVisible = true
@@ -260,7 +272,7 @@ class NavigationActivity : AppCompatActivity() {
           user.setString("balance", "${BitCoinFormat().decimalToDoge(balanceValue).toPlainString()} DOGE terlalu kecil")
         }
       }
-      user.setString("balanceMax", "${BitCoinFormat().decimalToDoge(balanceLimit).toPlainString()} DOGE")
+      user.setString("balanceMax", "${BitCoinFormat().decimalToDoge(balanceLimitValue).toPlainString()} DOGE")
     } else {
       runOnUiThread {
         navigationView.menu.findItem(R.id.nav_withdraw).isVisible = false
